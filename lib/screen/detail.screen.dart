@@ -1,7 +1,13 @@
+/* 
+웹툰 상세 화면 페이지 위젯
+ */
+
 import 'package:flutter/material.dart';
 import 'package:toonflix/models/webtoon_detail_model.dart';
 import 'package:toonflix/models/webtoon_episode_model.dart';
 import 'package:toonflix/services/api_service.dart';
+import 'package:toonflix/widgets/episode_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailScren extends StatefulWidget {
   final String title, thumb, id;
@@ -115,42 +121,9 @@ class _DetailScrenState extends State<DetailScren> {
                     return Column(
                       children: [
                         for (var episodes in snapshot.data!)
-                          Container(
-                            margin: EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(20),
-                              color: Colors.green.shade400,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: 20,
-                                  ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceBetween,
-                                children: [
-                                  Text(
-                                    episodes.title,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons
-                                        .chevron_right_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          Episode(
+                            episodes: episodes,
+                            webtoonId: widget.id),
                       ],
                     );
                   }
@@ -164,3 +137,5 @@ class _DetailScrenState extends State<DetailScren> {
     );
   }
 }
+
+
