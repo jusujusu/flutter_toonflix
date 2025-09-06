@@ -9,14 +9,14 @@ import 'package:toonflix/models/webtoon_model.dart';
 
 class ApiService {
   // baseUrl
-  final String baseUrl =
+  static final String baseUrl =
       "https://webtoon-crawler.nomadcoders.workers.dev";
 
   // 오늘의 웹툰 목록
-  final String today = "today";
+  static final String today = "today";
 
   // 오늘의 웹툰 목록 api
-  Future<List<WebtoonModel>> getTodaysToons() async {
+  static Future<List<WebtoonModel>> getTodaysToons() async {
     List<WebtoonModel> webtoonInstances = [];
 
     // 오늘의 웹툰 목록 url
