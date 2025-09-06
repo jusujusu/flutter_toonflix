@@ -8,7 +8,7 @@ class WebtoonDetailModel {
 
   // 네임드 생성자
   WebtoonDetailModel.fromJson(Map<String, dynamic> json)
-    : title = json['tile'],
+    : title = json['title'],
       about = json['about'],
       genre = json['genre'],
       age = json['age'];

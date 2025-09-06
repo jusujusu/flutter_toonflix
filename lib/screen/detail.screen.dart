@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:toonflix/models/webtoon_detail_model.dart';
+import 'package:toonflix/models/webtoon_episode_model.dart';
+import 'package:toonflix/services/api_service.dart';
 
-class DetailScren extends StatelessWidget {
+class DetailScren extends StatefulWidget {
   final String title, thumb, id;
 
   const DetailScren({
@@ -11,6 +14,21 @@ class DetailScren extends StatelessWidget {
   });
 
   @override
+  State<DetailScren> createState() => _DetailScrenState();
+}
+
+class _DetailScrenState extends State<DetailScren> {
+  late Future<WebtoonDetailModel> webtoon;
+  late Future<List<WebtoonEpisodeModel>> episodes;
+
+  @override
+  void initState() {
+    super.initState();
+    webtoon = ApiService.getToonById(widget.id);
+    episodes = ApiService.getLatestEpisodesById(widget.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -19,7 +37,10 @@ class DetailScren extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
         centerTitle: true,
-        title: Text(title, style: TextStyle(fontSize: 24)),
+        title: Text(
+          widget.title,
+          style: TextStyle(fontSize: 24),
+        ),
       ),
       body: Column(
         children: [
@@ -28,7 +49,7 @@ class DetailScren extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Hero(
-                tag: id,
+                tag: widget.id,
                 child: Container(
                   width: 250,
                   clipBehavior: Clip.hardEdge,
@@ -45,7 +66,7 @@ class DetailScren extends StatelessWidget {
                     ],
                   ),
                   child: Image.network(
-                    thumb,
+                    widget.thumb,
                     headers: const {
                       'User-Agent':
                           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
@@ -55,6 +76,35 @@ class DetailScren extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 25),
+          FutureBuilder(
+            future: webtoon,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                  ),
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.data!.about,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        '${snapshot.data!.genre} / ${snapshot.data!.age}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return Text("....");
+            },
           ),
         ],
       ),
