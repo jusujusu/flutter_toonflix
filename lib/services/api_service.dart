@@ -1,0 +1,45 @@
+/* 
+api 클래스
+ */
+
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:toonflix/models/webtoon_model.dart';
+
+class ApiService {
+  // baseUrl
+  final String baseUrl =
+      "https://webtoon-crawler.nomadcoders.workers.dev";
+
+  // 오늘의 웹툰 목록
+  final String today = "today";
+
+  // 오늘의 웹툰 목록 api
+  Future<List<WebtoonModel>> getTodaysToons() async {
+    List<WebtoonModel> webtoonInstances = [];
+
+    // 오늘의 웹툰 목록 url
+    final url = Uri.parse('$baseUrl/$today');
+
+    // http get 메소드
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      // 받아온 데이터를 json 형태로 변경
+      final List<dynamic> webtoons = jsonDecode(
+        response.body,
+      );
+
+      // json으로 잘 나오는지 확인
+      for (var webtoon in webtoons) {
+        webtoonInstances.add(
+          WebtoonModel.fromJson(webtoon),
+        );
+      }
+
+      return webtoonInstances;
+    }
+    throw Error();
+  }
+}
